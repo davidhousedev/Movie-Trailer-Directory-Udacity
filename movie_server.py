@@ -9,13 +9,15 @@ import fresh_tomatoes
 
 PORT = 8000
 
-
+# This class configures SimpleHTTPServer to reuse sockets between restarts, allowing for rapid testing
+# borrowed MyTCPServer class configuration from: http://stackoverflow.com/questions/6380057/python-binding-socket-address-already-in-use/18858817#18858817
 class MyTCPServer(SocketServer.TCPServer):
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
 
-
+# Intercepts all GET requests, initalizes list of videos, creates HTML view.
+# The created HTML file will be automatically rendered, because it is named index.html
 # borrowed MyRequestHandler syntax from: http://stackoverflow.com/questions/10607621/a-simple-website-with-python-using-simplehttpserver-and-socketserver-how-to-onl
 class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
@@ -37,7 +39,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 
-
+# Directs SimpleHTTPServer to use custom request handler and TCP server
 Handler = MyRequestHandler
 httpd = MyTCPServer(("0.0.0.0", PORT), Handler)
 
