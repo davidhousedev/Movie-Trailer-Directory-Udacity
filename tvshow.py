@@ -8,4 +8,7 @@ class TvShow(Video):
 	"""
 	def __init__(self, title, youtube_url):
 		Video.__init__(self, title, youtube_url)
-		self.seasons = self.json_data["totalSeasons"]
+		self.seasons = self.json_data["totalSeasons"] + " season"
+		print(self.seasons[0])
+		if int(self.seasons[0]) != 1:
+			self.seasons += "s"
